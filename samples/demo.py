@@ -160,8 +160,6 @@ def main():
     process_button = tk.Button(text="Process Images",
                                width=25,
                                height=5,
-                               bg="black",
-                               fg="white",
                                command=process)
     process_button.pack()
 
