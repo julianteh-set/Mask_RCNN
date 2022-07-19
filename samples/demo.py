@@ -6,6 +6,19 @@ import numpy as np
 import skimage.io
 import matplotlib
 import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import filedialog
+
+window = tk.Tk()
+
+
+def get_dir(event):
+    currdir = os.getcwd()
+    tempdir = filedialog.askdirectory(parent=window,
+                                      initialdir=currdir,
+                                      title='Please select a directory')
+    if len(tempdir) > 0:
+        return tempdir
 
 
 def main():
@@ -69,6 +82,12 @@ def main():
         'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase',
         'scissors', 'teddy bear', 'hair drier', 'toothbrush'
     ]
+
+    button = tk.Button(text="Path", width=25, height=5, bg="white", fg="black")
+    button.bind("<Button-1>", get_dir)
+    button.pack()
+
+    window.mainloop()
 
     while True:
         path = input("Input the path to the file/folder you want to evaluate")
