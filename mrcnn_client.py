@@ -12,7 +12,7 @@ from tkinter import filedialog, BooleanVar, Checkbutton
 window = tk.Tk()
 
 # Root directory of the project
-ROOT_DIR = os.path.abspath("../")
+ROOT_DIR = os.path.abspath(".")
 
 input_dir = ROOT_DIR
 output_dir = ROOT_DIR
@@ -27,8 +27,7 @@ from mrcnn import utils
 import mrcnn.model as modellib
 from mrcnn import visualize
 # Import COCO config
-sys.path.append(os.path.join(ROOT_DIR,
-                             "samples/coco/"))  # To find local version
+sys.path.append(os.path.join(ROOT_DIR, "coco/"))  # To find local version
 import coco
 
 # Directory to save logs and trained model
