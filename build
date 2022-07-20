@@ -1,0 +1,9 @@
+#!/bin/bash
+
+BASEDIR=$(dirname "$0")
+cd $BASEDIR
+
+python3 -m pip install -r requirements.txt
+
+rm -rf -v Mask_RCNN.zip
+zip -r Mask_RCNN.zip ./*
