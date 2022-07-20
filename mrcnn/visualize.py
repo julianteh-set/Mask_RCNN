@@ -124,8 +124,7 @@ def mask_instances(image,
         assert boxes.shape[0] == masks.shape[-1] == class_ids.shape[0]
 
     # If no axis is passed, create one and automatically call show()
-    plt.clf()
-
+    plt.close(fig="all")
     auto_show = False
     if not ax:
         _, ax = plt.subplots(1, figsize=figsize)
