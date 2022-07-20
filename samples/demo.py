@@ -125,13 +125,14 @@ def process():
 
             # Visualize results
             r = results[0]
-            visualize.display_instances(image,
-                                        r['rois'],
-                                        r['masks'],
-                                        r['class_ids'],
-                                        class_names,
-                                        r['scores'],
-                                        show_bbox=False)
+            ax, masked_image = visualize.mask_instances(image,
+                                                        r['rois'],
+                                                        r['masks'],
+                                                        r['class_ids'],
+                                                        class_names,
+                                                        r['scores'],
+                                                        show_bbox=False)
+            visualize.display_masked_image(ax, masked_image)
 
         # Write out the images to output_dir
 
