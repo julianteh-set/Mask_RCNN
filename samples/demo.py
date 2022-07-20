@@ -7,7 +7,7 @@ import skimage.io
 import matplotlib
 import matplotlib.pyplot as plt
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, BooleanVar, Checkbutton
 
 window = tk.Tk()
 
@@ -18,6 +18,8 @@ input_dir = ROOT_DIR
 output_dir = ROOT_DIR
 input_field = tk.Label(text=input_dir)
 output_field = tk.Label(text=output_dir)
+
+view_checked = tk.BooleanVar()
 
 # Import Mask RCNN
 sys.path.append(ROOT_DIR)  # To find local version of the library
@@ -79,6 +81,8 @@ class_names = [
 
 
 def set_input_dir():
+    global input_dir
+
     currdir = os.getcwd()
 
     folder_path = filedialog.askdirectory(parent=window,
@@ -94,6 +98,8 @@ def set_input_dir():
 
 
 def set_output_dir():
+    global output_dir
+
     currdir = os.getcwd()
 
     folder_path = filedialog.askdirectory(parent=window,
@@ -109,6 +115,9 @@ def set_output_dir():
 
 
 def process():
+    global input_dir
+    global output_dir
+
     for root, dirs, files in os.walk(input_dir):
         for file in files:
             file_path = os.path.join(root, file)
@@ -125,42 +134,66 @@ def process():
 
             # Visualize results
             r = results[0]
-            ax, masked_image = visualize.mask_instances(image,
-                                                        r['rois'],
-                                                        r['masks'],
-                                                        r['class_ids'],
-                                                        class_names,
-                                                        r['scores'],
-                                                        show_bbox=False)
-            visualize.display_masked_image(ax, masked_image)
 
-        # Write out the images to output_dir
+            masked, ax, masked_image = visualize.mask_instances(
+                image,
+                r['rois'],
+                r['masks'],
+                r['class_ids'],
+                class_names,
+                r['scores'],
+                show_bbox=False,
+                filter=["car", "truck", "bus", "motorcycle", "person"])
+
+            if masked:
+                if view_checked.get():
+                    visualize.display_masked_image(ax, masked_image)
+
+                # Write out the images to output_dir
+                skimage.io.imsave(os.path.join(output_dir, "masked_" + file),
+                                  masked_image)
+            else:
+                print("No mask found, saving original image")
+
+            skimage.io.imsave(os.path.join(output_dir, file), image)
 
 
 def main():
-    input_field.pack()
+    global input_dir
+    global output_dir
+    global input_field
+    global output_field
 
+    input_label = tk.Label(text="Input Directory")
+    input_label.pack()
     input_button = tk.Button(text="Browse",
-                             width=10,
+                             width=8,
                              height=1,
                              bg="white",
                              fg="black",
                              command=set_input_dir)
+    input_field.pack()
     input_button.pack()
 
-    output_field.pack()
-
+    output_label = tk.Label(text="Output Directory")
+    output_label.pack()
     output_button = tk.Button(text="Browse",
-                              width=10,
+                              width=8,
                               height=1,
                               bg="white",
                               fg="black",
                               command=set_output_dir)
+    output_field.pack()
     output_button.pack()
 
+    view_button = Checkbutton(window,
+                              text="View images",
+                              variable=view_checked)
+    view_button.pack()
+
     process_button = tk.Button(text="Process Images",
-                               width=25,
-                               height=5,
+                               width=15,
+                               height=3,
                                command=process)
     process_button.pack()
 
