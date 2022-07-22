@@ -169,6 +169,9 @@ def mask_instances(image,
         else:
             caption = captions[i]
 
+        if score and score < 0.85:
+            continue
+
         if label in filter:
             ax.text(x1,
                     y1 + 8,

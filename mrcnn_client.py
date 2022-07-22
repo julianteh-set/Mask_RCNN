@@ -126,7 +126,14 @@ def process():
                 ('.png', '.jpg', '.jpeg')):
                 continue
 
-            image = skimage.io.imread(file_path)
+            image = None
+            try:
+                image = skimage.io.imread(file_path)
+            except Exception as e:
+                print(e)
+
+            if image is None:
+                continue
 
             # Run detection
             results = model.detect([image], verbose=1)
@@ -154,7 +161,7 @@ def process():
             else:
                 print("No mask found, saving original image")
 
-            skimage.io.imsave(os.path.join(output_dir, file), image)
+                skimage.io.imsave(os.path.join(output_dir, file), image)
 
 
 def main():
